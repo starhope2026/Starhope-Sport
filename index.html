@@ -149,8 +149,13 @@
           <div class="field"><label for="coNote">Catatan</label><textarea id="coNote" name="note" rows="2"></textarea></div>
           <div class="summary" id="coSummary"></div>
           <p class="error" id="coError" hidden></p>
-          <button type="submit" class="btn btn-wa btn-block">Kirim Pesanan via WhatsApp</button>
+          <button type="submit" class="btn btn-primary btn-block">Lanjut</button>
         </form>
+        <div id="coDone" hidden>
+          <p>Data pesanan sudah siap. Tekan tombol di bawah untuk mengirim pesanan ke admin lewat WhatsApp.</p>
+          <a id="waSend" class="btn btn-wa btn-block" href="#" target="_blank" rel="noopener">Kirim Pesanan via WhatsApp</a>
+          <button type="button" class="btn btn-block" id="coBack" style="margin-top:8px;background:#eef0f3">Ubah data</button>
+        </div>
       </div>
     </div>
   </div>

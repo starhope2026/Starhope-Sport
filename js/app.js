@@ -260,6 +260,8 @@
     closeOverlay($("#cartDrawer"));
     renderSummary();
     $("#coError").hidden = true;
+    $("#coDone").hidden = true;
+    $("#checkoutForm").hidden = false;
     openOverlay($("#checkoutModal"));
   });
 
@@ -321,13 +323,22 @@
       err.hidden = false;
       return;
     }
-    const url = `https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(buildWhatsAppMessage(d))}`;
-    window.open(url, "_blank", "noopener");
+    // Pakai link biasa (bukan window.open) supaya tidak kena popup blocker.
+    $("#waSend").href = `https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(buildWhatsAppMessage(d))}`;
+    f.hidden = true;
+    $("#coDone").hidden = false;
+  });
+
+  $("#waSend").addEventListener("click", () => {
     cart = [];
     saveCart();
-    f.reset();
+    $("#checkoutForm").reset();
     closeOverlay($("#checkoutModal"));
-    toast("Pesanan dikirim ke WhatsApp. Terima kasih!");
+    toast("Terima kasih! Lanjutkan kirim pesan di WhatsApp.");
+  });
+  $("#coBack").addEventListener("click", () => {
+    $("#coDone").hidden = true;
+    $("#checkoutForm").hidden = false;
   });
 
   // ---------- Misc ----------
