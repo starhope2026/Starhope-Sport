@@ -1,31 +1,35 @@
 # Starhope-Sport
 
-Toko jersey online Starhope Sport — **Tahap 1: storefront + order via WhatsApp**.
+Toko online jersey grosir Starhope Sport. Rencana lengkap: dokumen "Rencana Toko Online Jersey Grosir" (5 tahap).
 
-## Fitur tahap 1
-- Katalog jersey dengan filter kategori (Klub, Timnas, Retro, Custom), pencarian, dan urutan harga/nama
-- Detail produk: pilih ukuran (stok per ukuran, ukuran habis otomatis nonaktif), jumlah, nama/nomor punggung untuk produk custom
-- Keranjang tersimpan di browser (localStorage), jumlah dibatasi sesuai stok
-- Checkout: form data pengiriman → pesanan otomatis jadi pesan WhatsApp ke admin
-- Responsif (HP & desktop), tanpa build/dependency
+## Status
 
-## Menjalankan
-Buka `index.html` langsung di browser, atau:
+| Tahap | Isi | Status |
+|---|---|---|
+| 1. Dasar & admin | Database, login admin, menu Barang, stok per ukuran, impor Excel | ✅ kode siap — setup: [docs/SETUP.md](docs/SETUP.md) |
+| 2. Pelanggan & katalog | Daftar/masuk nomor HP + OTP, katalog dari database, keranjang | ⏳ |
+| 3. Pembayaran | Checkout, Xendit/Midtrans, konfirmasi lunas otomatis, kunci stok | ⏳ |
+| 4. Proses pesanan | Tahapan kemas, resi, Pesanan saya, notifikasi admin | ⏳ |
+| 5. Laporan | Penjualan, terlaris, restok, akses staf, ongkir | ⏳ |
+
+## Isi repo
+
+- `admin/`, `src/admin/` — halaman admin (`/admin/`): Barang, Stok (masuk & koreksi/opname), Riwayat, Kategori, Impor Excel
+- `supabase/migrations/` — skema database + aturan keamanan (dijalankan di Supabase SQL Editor)
+- `index.html`, `public/` — etalase lama (data contoh, order via WhatsApp); diganti katalog dari database di tahap 2
+
+### Aturan penting yang dijaga database
+- Stok **hanya** berubah lewat fungsi stok, dan setiap perubahan tercatat di riwayat (siapa, kapan, alasan).
+- Stok tidak bisa minus; ukuran yang masih ada stoknya tidak bisa dihapus.
+- **Harga modal** disimpan terpisah dan hanya bisa dibaca pemilik — tidak pernah sampai ke pelanggan atau staf gudang.
+- Impor Excel semua-atau-tidak: kalau satu baris salah, tidak ada yang tersimpan. Impor file yang sama dua kali aman.
+
+## Pengembangan
 
 ```bash
-python3 -m http.server 8000
-# buka http://localhost:8000
+npm install
+npm run dev                 # butuh .env.local berisi VITE_SUPABASE_URL & VITE_SUPABASE_ANON_KEY
+npm run dev -- --mode mock  # coba admin dengan data tiruan, tanpa Supabase
+                            # login: email apa saja, password: rahasia123
+npm run build
 ```
-
-## Mengatur toko
-Semua data ada di `js/products.js`:
-- `STORE.whatsapp` — **ganti dengan nomor WhatsApp admin** (format `628xxxxxxxxxx`)
-- `STORE.shippingFlat` — ongkir flat; `0` = ongkir dikonfirmasi admin
-- `PRODUCTS` — daftar produk. Isi `image: "img/nama-file.jpg"` untuk memakai foto asli; kalau kosong, ilustrasi jersey dibuat dari `colors` + `pattern` (`plain`, `stripes`, `hoops`, `sash`).
-
-## Deploy
-Bisa langsung dipasang di GitHub Pages (Settings → Pages → branch `main`, folder `/`), Netlify, atau Vercel.
-
-## Rencana tahap berikutnya (usulan)
-- Tahap 2: halaman produk sendiri (URL per produk), foto asli, panduan ukuran, cek ongkir
-- Tahap 3: backend + admin panel (kelola produk/stok/pesanan), payment gateway (Midtrans/Xendit)
